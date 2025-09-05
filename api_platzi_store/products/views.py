@@ -9,15 +9,44 @@ def store_view(request):
     return render(request, 'store.html')
 
 def products_view(request):
+    query = request.GET.get("q", "")
+    category_id = request.GET.get("category", "")
+    
     try:
-        response = requests.get(URL)
+        categories_response = requests.get(f"https://api.escuelajs.co/api/v1/categories")
+        categories = categories_response.json() if categories_response.status_code == 200 else []
+        
+        params = {}
+        if query:
+            params["title"] = query
+        if category_id:
+            params["categoryId"] = category_id
+            
+        response = requests.get(URL, params=params)
         if response.status_code == 200:
             products = response.json()
-            context = {"products": products, "api_status": "success"}
+            context = {
+                "products": products,
+                "categories": categories,
+                "selected_category": category_id,
+                "search_query": query,
+                "api_status": "success"
+            }
         else:
-            context = {"products": [], "error": "Error en la API", "api_status": "error"}
+            context = {
+                "products": [],
+                "categories": categories,
+                "error": "Error en la API",
+                "api_status": "error"
+            }
     except Exception as e:
-        context = {"products": [], "error": str(e), "api_status": "error"}
+        context = {
+            "products": [],
+            "categories": [],
+            "error": str(e),
+            "api_status": "error"
+        }
+        
     return render(request, "products.html", context)
 
 def product_detail_view(request, product_id):

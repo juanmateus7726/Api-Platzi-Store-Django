@@ -10,7 +10,23 @@
 {% block content %}
 <div class="container">
     <h1>Productos</h1>
+
+    <form method="get" class="filters">
+        <input type="text" name="q" placeholder="🔍 Buscar producto..."
+        value="{{ search_query|default:'' }}">
+        <select name="category">
+            <option value="">Todas las categorias</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category  %}{% endif %}>
+                {{ cat.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn">Buscar</button>
+    </form>
+
     <a href="{% url 'products:add_product' %}" class="btn">Agregar Producto</a>
+
     <div class="products-grid">
         {% for product in products %}
         <div class="product-card">
@@ -23,13 +39,49 @@
             <div class-"actions">
                 <a href="{% url 'products:product_detail' product.id %}" class="btn">Detalles</a>
                 <a href="{% url 'products:update_product' product.id %}" class="btn">Editar</a>
-                <form method="POST" action="{% url 'products:delete_product' product.id %}" style="display:inline;">
+
+                <button type="button" class="btn btn-danger" onclick="openModal({{ product.id }})">
+                    Eliminar
+                </button>
+                <form id="delete-form-{{ product.id }}" method="POST" action="{% url 'products:delete_product' product.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
                 </form>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
+
+<div id="delete-modal" class="modal">
+    <div class="modal-content">
+        <h2>⚠️ Confirmar eliminación</h2>
+        <p>Seguro que quieres eliminar este producto?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn" onclick="closeModal()">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let productToDelete = null;
+
+    function openModal(productId) {
+        productToDelete = productId;
+        document.getElementById("delete-model").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("delete-modal").style.display = "none";
+        productToDelete = null;
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+        
+    })
+            document.getElementById('delete-form-${productToDelete}').submit();
+        }
+    });
+</script>
+
 {% endblock %}
