@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/store.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="center-card">
+    <h1>Bienvenido a mi tienda</h1>
+    <a href="{% url 'products:products' %}" class="btn">Ver Productos</a>
+</div>
+{% endblock %}

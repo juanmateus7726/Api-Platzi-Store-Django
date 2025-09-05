@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title">{{ product.title }}</h1>
+    <p class="price">$ {{ product.price }}</p>
+    <p class="description">{{ product.description }}</p>
+
+    <div class="gallery">
+    {% for image in product.images %}
+        <img src="{{ image }}" alt="{{ product.title }}">
+    {% endfor %}
+    </div>
+
+    <div class="actions">
+    <a href="{% url 'products:update_product' product.id %}" class="btn">✏️ Editar</a>
+    <form method="POST" action="{% url 'products:delete_product' product.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
+    </form>
+    <a href="{% url 'products:products' %}" class="btn">⬅️ Volver</a>
+    </div>
+</div>
+{% endblock %}

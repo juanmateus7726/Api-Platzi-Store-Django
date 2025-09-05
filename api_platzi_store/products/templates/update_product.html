@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Actualizar Producto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Actualizar Producto</h1>
+    <form method="POST">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Nuevo título">
+    <input type="number" name="price" placeholder="Nuevo precio">
+    <textarea name="description" placeholder="Nueva descripción"></textarea>
+    <input type="number" name="categoryId" placeholder="Nuevo ID Categoría">
+    <input type="text" name="image" placeholder="Nueva URL Imagen">
+    <button type="submit" class="btn">Actualizar</button>
+    </form>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+</div>
+{% endblock %}

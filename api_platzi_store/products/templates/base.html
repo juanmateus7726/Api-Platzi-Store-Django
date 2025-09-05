@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Platzi Store</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="{% url 'products:store' %}" class="nav-logo">Mi Tienda</a>
+            <div class="nav-links">
+                <a href="{% url 'products:products' %}">Productos</a>
+                <a href="{% url 'products:add_product' %}">Agregar Producto</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Mi Tienda</p>
+    </footer>
+</body>
+</html>
