@@ -60,8 +60,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'products' / 'templates',
-            BASE_DIR / 'accounts' / 'templates', # Templates de accounts
+            BASE_DIR / 'templates',
+            BASE_DIR / 'templates', # Templates de accounts
             ],
         'APP_DIRS': True,
         'OPTIONS': {

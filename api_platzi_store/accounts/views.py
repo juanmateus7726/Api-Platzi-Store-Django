@@ -215,21 +215,21 @@ def register_view(request):
                 'email': form.cleaned_data['email'],
                 'first_name': form.cleaned_data['first_name'],
                 'last_name': form.cleaned_data['last_name'],
-                'password': form.cleaned_data['password'],
+                'password': form.cleaned_data['password1'],
                 'password2': form.cleaned_data['password2'],
             }
             
             try:
                 # Llamada a la API de registro 
-                response = request.post(
+                response = requests.post(
                     f"{API_BASE_URL}register/",
                     json=user_data,
                     headers={
-                        'content-Type': 'aplication/json'
+                        'content-Type': 'application/json'
                     },
-                    timetout=10
+                    timeout=10
                 )
-                if Response.stattus_code == 201:
+                if Response.status_code == 201:
                     # Registro exitoso
                     response_data = response.json()
                     
@@ -271,12 +271,12 @@ def register_view(request):
                     form.add_error(None, f'Error del servidor: {response.status_code}')
                     
             except requests.RequestException as e:
-                form.add_error(None, 'Erro de conexion con el servidor. Verifica tu conexion a internet.')
+                form.add_error(None, 'Error de conexion con el servidor. Verifica tu conexion a internet.')
                 
-        else:
-            form = UserRegistrationForm()
+    else:
+        form = UserRegistrationForm()
             
-            return render(request, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
         
 @csrf_protect
 @never_cache
@@ -291,7 +291,7 @@ def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_cata['username']
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             
             login_data = {
@@ -301,7 +301,7 @@ def login_view(request):
             
             try:
                 # Llamada a la API de login
-                response = request.post(
+                response = requests.post(
                     f"{API_BASE_URL}login/",
                     json=login_data,
                     headers={
@@ -317,7 +317,7 @@ def login_view(request):
                     # Intentar autenticar localmente Django
                     user = authenticate(request, username=username, password=password)
                     
-                    if user and user.is_activate:
+                    if user and user.is_active:
                         # Usuario existe localmente y esta activo
                         login(request, user)
                         messages.success(
@@ -331,7 +331,7 @@ def login_view(request):
                             request.session['refresh_token'] = response_data.get('refresh_token', '')
                             
                         # Redirigir a donde el usuario queria ir originalmente
-                        next_url = request.GET.get('next', 'products:product_list')
+                        next_url = request.GET.get('next', 'products:products')
                         return redirect(next_url)
                     else:
                         # El usuario existe en la API pero no localmente, crearlo
