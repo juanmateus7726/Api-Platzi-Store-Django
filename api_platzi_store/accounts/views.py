@@ -27,7 +27,7 @@ from .serializers import (
 API_BASE_URL = "http://127.0.0.1:8000/api/"
 
 @api_view(['POST'])
-@permission_classes([AlllowAny])
+@permission_classes([AllowAny])
 def register_api(request):
     """ 
     Vista API para el registro de nuevos usuarios.
