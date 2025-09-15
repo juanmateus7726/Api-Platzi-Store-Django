@@ -17,7 +17,7 @@ const TokenManager = {
      * Guarda el token en localStorage
      */
     setToken: function(token) {
-        localStorage.setItem('authToken', token):
+        localStorage.setItem('authToken', token);
     },
 
     /**

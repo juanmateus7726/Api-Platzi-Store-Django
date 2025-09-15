@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'products'
+    'products',
+    'accounts',
+    'rest_framework',
+    'rest_framework.authtoken', # Para autenticacion con token
 ]
 
 MIDDLEWARE = [
@@ -56,10 +59,14 @@ ROOT_URLCONF = 'api_platzi_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'products' / 'templates',
+            BASE_DIR / 'accounts' / 'templates', # Templates de accounts
+            ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -117,8 +124,189 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'products' / 'static',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# API Configuration
+PLATZI_API_BASE_URL = 'https://api.escuelajs.co/api/v1/'
+
+# Configuración de Django REST Framework
+REST_FRAMEWORK = {
+    # Configuración de autenticación por defecto
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    
+    # Permisos por defecto (pueden ser sobrescritos en cada vista)
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    
+    # Configuración de paginación
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    
+    # Formato de respuesta por defecto
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',  # Para interfaz web de la API
+    ],
+    
+    # Formato de parseo de datos
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    
+    # Configuración de throttling (límite de peticiones)
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',  # Para usuarios anónimos
+        'user': '1000/hour'   # Para usuarios autenticados
+    }
+}
+
+# Configuración de CORS (Cross-Origin Resource Sharing)
+# Importante para permitir peticiones desde frontend en diferentes dominios
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React
+    "http://localhost:8080",  # Vue
+    "http://localhost:4200",  # Angular
+    "http://127.0.0.1:8000",  # Django dev server
+]
+
+# O para desarrollo, puedes permitir todos los orígenes (NO usar en producción)
+# CORS_ALLOW_ALL_ORIGINS = True
+
+# Permitir credenciales en peticiones CORS
+CORS_ALLOW_CREDENTIALS = True
+
+# Headers permitidos en CORS
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# ============================================================================
+# CONFIGURACIÓN DE AUTENTICACIÓN
+# ============================================================================
+
+# URLs de redirección para autenticación
+LOGIN_URL = 'accounts:login'          # URL a la que redirige @login_required
+LOGIN_REDIRECT_URL = 'products:product_list'  # Después de login exitoso
+LOGOUT_REDIRECT_URL = 'accounts:login'         # Después de logout
+
+# Configuración de mensajes de Django
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'debug',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',  # Bootstrap usa 'danger' en lugar de 'error'
+}
+
+# Configuración de sesión
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # 30 días
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_SECURE = False  # Cambiar a True en producción con HTTPS
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# ============================================================================
+# CONFIGURACIÓN DE API PERSONALIZADA
+# ============================================================================
+
+# URL base de tu API de autenticación (CAMBIAR POR TU URL REAL)
+CUSTOM_API_BASE_URL = "http://127.0.0.1:8000/api/"
+
+# Configuración de timeouts para requests
+API_TIMEOUT = 10  # segundos
+
+# ============================================================================
+# CONFIGURACIÓN DE LOGGING (Opcional)
+# ============================================================================
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs' / 'django_errors.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'accounts': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'products': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Crear directorio de logs si no existe
+LOGS_DIR = BASE_DIR / 'logs'
+LOGS_DIR.mkdir(exist_ok=True)
+
+# ============================================================================
+# CONFIGURACIÓN DE DESARROLLO/PRODUCCIÓN
+# ============================================================================
+
+if DEBUG:
+    # Configuraciones adicionales para desarrollo
+    INTERNAL_IPS = [
+        '127.0.0.1',
+        'localhost',
+    ]
+    
+    # Permitir todos los hosts en desarrollo (no usar en producción)
+    ALLOWED_HOSTS = ['*']
+else:
+    # Configuraciones para producción
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True

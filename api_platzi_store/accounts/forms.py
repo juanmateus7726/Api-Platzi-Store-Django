@@ -39,13 +39,13 @@ class UserRegistrationForm(forms.Form):
     )
     password1 = forms.CharField(
         label='Contrasena',
-        wirget=forms.PasswordInput(attrs={
+        widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Minimo 8 caracteres',
             'id': 'password1'
         })
     )
-    password2 = forms.CharDField(
+    password2 = forms.CharField(
         label='Confirmar contrasena',
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
