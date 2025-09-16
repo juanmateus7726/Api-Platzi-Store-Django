@@ -131,7 +131,7 @@ def logout_api(request):
     if request.method == 'POST':
         try:
             # Eliminamos el token del usuario
-            request.user.auth_token.detele()
+            request.user.auth_token.delete()
             
             # Cerramos la sesion de Django
             logout(request)
@@ -139,7 +139,7 @@ def logout_api(request):
             return Response({
                 'succes': True,
                 'message': 'Sesion cerrada exitosamente'
-            }, status=status.HTTPP_200_OK)
+            }, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response({
