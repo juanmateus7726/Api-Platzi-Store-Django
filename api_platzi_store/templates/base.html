@@ -15,6 +15,15 @@
             <div class="nav-links">
                 <a href="{% url 'products:products' %}">Productos</a>
                 <a href="{% url 'products:add_product' %}">Agregar Producto</a>
+
+                <!-- 🔹 Links de autenticación -->
+                {% if user.is_authenticated %}
+                    <span>Hola, {{ user.first_name|default:user.username }}</span>
+                    <a href="{% url 'accounts:logout' %}">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
+                    <a href="{% url 'accounts:register' %}">Registrarse</a>
+                {% endif %}
             </div>
         </nav>
     </header>

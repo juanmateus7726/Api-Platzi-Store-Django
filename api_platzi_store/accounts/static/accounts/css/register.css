@@ -1,32 +1,33 @@
 /* ===== REGISTER STYLES ===== */
-.register-container {
+.auth-card {
     max-width: 450px;
     margin: 50px auto;
     padding: 40px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.6);
 }
 
-.register-title {
+.auth-title {
     text-align: center;
-    color: #00cec9;
-    margin-bottom: 30px;
+    color: #9b59b6;
+    margin-bottom: 25px;
     font-size: 2rem;
+    font-weight: 700;
 }
 
-.register-form .form-group {
-    margin-bottom: 20px;
+.auth-card-body .form-group {
+    margin-bottom: 18px;
 }
 
-.register-form label {
+.auth-card-body label {
     display: block;
-    margin-bottom: 8px;
-    color: #bbb;
-    font-weight: 500;
+    margin-bottom: 6px;
+    color: #ccc;
+    font-weight: 600;
 }
 
-.register-form input {
+.auth-card-body input {
     width: 100%;
     padding: 12px 16px;
     border: none;
@@ -38,21 +39,17 @@
     transition: all 0.2s;
 }
 
-.register-form input:focus {
+.auth-card-body input:focus {
     background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px #00cec9;
+    box-shadow: 0 0 0 2px #9b59b6;
 }
 
-.register-form input::placeholder {
-    color: #bbb;
-}
-
-.register-btn {
+.auth-submit-btn {
     width: 100%;
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #00cec9;
+    background: #9b59b6;
     color: #fff;
     font-weight: 600;
     font-size: 1rem;
@@ -61,30 +58,31 @@
     margin-top: 10px;
 }
 
-.register-btn:hover {
-    background: #019c98;
+.auth-submit-btn:hover {
+    background: #8e44ad;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.register-links {
+.auth-links {
     text-align: center;
     margin-top: 20px;
     color: #bbb;
 }
 
-.register-links a {
-    color: #00cec9;
+.auth-links a {
+    color: #9b59b6;
     text-decoration: none;
+    font-weight: 500;
     transition: color 0.2s;
 }
 
-.register-links a:hover {
-    color: #019c98;
+.auth-links a:hover {
+    color: #8e44ad;
 }
 
 /* Mensajes */
-.register-messages {
+.auth-messages {
     margin-bottom: 20px;
 }
 
@@ -105,31 +103,4 @@
     background: rgba(231, 76, 60, 0.2);
     color: #e74c3c;
     border: 1px solid #e74c3c;
-}
-
-/* Campos opcionales */
-.optional-field {
-    opacity: 0.8;
-}
-
-.optional-field label::after {
-    content: " (opcional)";
-    font-size: 0.8em;
-    color: #777;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .register-container {
-        margin: 30px 20px;
-        padding: 30px 20px;
-    }
-    
-    .register-title {
-        font-size: 1.5rem;
-    }
-    
-    .register-form .form-group {
-        margin-bottom: 15px;
-    }
 }

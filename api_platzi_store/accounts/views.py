@@ -204,7 +204,7 @@ def register_view(request):
     """
     if request.user.is_authenticated:
         messages.info(request, 'Ya tienes una sesion activa.')
-        return redirect('products:product_list')
+        return redirect('products:store')
     
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
@@ -286,7 +286,7 @@ def login_view(request):
     """
     if request.user.is_authenticated:
         messages.info(request, 'Ya tienes una sesion activa.')
-        return redirect('products:product_list')
+        return redirect('products:store')
     
     if request.method == 'POST':
         form = UserLoginForm(request.POST)
@@ -331,7 +331,7 @@ def login_view(request):
                             request.session['refresh_token'] = response_data.get('refresh_token', '')
                             
                         # Redirigir a donde el usuario queria ir originalmente
-                        next_url = request.GET.get('next', 'products:products')
+                        next_url = request.GET.get('next', 'products:store')
                         return redirect(next_url)
                     else:
                         # El usuario existe en la API pero no localmente, crearlo
@@ -379,11 +379,11 @@ def login_view(request):
                         
             except requests.RequestException as e:
                 form.add_error(None, 'Error de conexion con el servidor. Verifica tu conexion a internet.')
-                
+            pass
     else:
         form = UserLoginForm()
         
-        return render(request, 'login.html', {'form': form})
+    return render(request, 'login.html', {'form': form})
     
 def logout_view(request):
     """ 
@@ -394,12 +394,12 @@ def logout_view(request):
     # Opcional: LLamar al endpoint logout de la API
     if 'api_token' in request.session:
         try:
-            request.post(
+            requests.post(
                 f"{API_BASE_URL}logout/",
-                json={'refresh_token': request.session('refresh_token', '')},
+                json={'refresh_token': request.session.get('refresh_token', '')},
                 headers={
                     'Authorization': f'Bearer {request.session["api_token"]}',
-                    'content-Type': 'aplication/json'
+                    'Content-Type': 'application/json'
                 },
                 timeout=5
             )
@@ -412,14 +412,14 @@ def logout_view(request):
             del request.session['refresh_token']
             
         # Cerrar sesion en Django
-        logout(request)
+    logout(request)
+    
+    if username:
+        messages.success(request, f'Has cerrado sesion exitosamente, {username}. Hasta pronto!')
+    else:
+        messages.success(request, ' Has cerrado sesion exitosamente.')
         
-        if username:
-            messages.success(request, f'Has cerrado sesion exitosamente, {username}. Hasta pronto!')
-        else:
-            messages.success(request, ' Has cerrado sesion exitosamente.')
-            
-            return redirect('accounts:login')
+    return redirect('accounts:login')
 
 
 
