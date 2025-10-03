@@ -1,23 +1,90 @@
 {% extends 'base.html' %}
-{% load static %}
+
 {% block title %}Actualizar Producto{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background: #1a1a1a;
+        border-radius: 15px;
+        border: 1px solid #2a2a2a;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-container h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #8b5cf6;
+        font-size: 2rem;
+    }
+
+    .form-container form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-container input,
+    .form-container textarea {
+        padding: 15px;
+        border: 1px solid #333;
+        border-radius: 10px;
+        background: #0f0f0f;
+        color: #eaeaea;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-container input::placeholder,
+    .form-container textarea::placeholder {
+        color: #888;
+    }
+
+    .form-container input:focus,
+    .form-container textarea:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .form-container textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .form-container button {
+        margin-top: 10px;
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+
+    .error {
+        color: #ef4444;
+        text-align: center;
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(239, 68, 68, 0.1);
+        border-radius: 8px;
+        border: 1px solid #ef4444;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="form-container">
-    <h1>Actualizar Producto</h1>
+    <h1>✏️ Actualizar Producto</h1>
     <form method="POST">
-    {% csrf_token %}
-    <input type="text" name="title" placeholder="Nuevo título">
-    <input type="number" name="price" placeholder="Nuevo precio">
-    <textarea name="description" placeholder="Nueva descripción"></textarea>
-    <input type="number" name="categoryId" placeholder="Nuevo ID Categoría">
-    <input type="text" name="image" placeholder="Nueva URL Imagen">
-    <button type="submit" class="btn">Actualizar</button>
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="📝 Nuevo título">
+        <input type="number" name="price" placeholder="💰 Nuevo precio" step="0.01">
+        <textarea name="description" placeholder="📄 Nueva descripción"></textarea>
+        <input type="number" name="categoryId" placeholder="🏷️ Nuevo ID Categoría">
+        <input type="text" name="image" placeholder="🖼️ Nueva URL de imagen">
+        <button type="submit" class="btn">💾 Actualizar Producto</button>
     </form>
-    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    {% if error %}<p class="error">❌ {{ error }}</p>{% endif %}
 </div>
 {% endblock %}

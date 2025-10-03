@@ -1,31 +1,211 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title%}Productos{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #8b5cf6;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+    }
+
+    .filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        background: #1a1a1a;
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid #2a2a2a;
+    }
+
+    .filters input,
+    .filters select {
+        flex: 1;
+        min-width: 200px;
+        padding: 12px 15px;
+        border: 1px solid #333;
+        border-radius: 8px;
+        background: #0f0f0f;
+        color: #eaeaea;
+        font-size: 1rem;
+    }
+
+    .filters input:focus,
+    .filters select:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .add-product-btn {
+        display: inline-block;
+        margin-bottom: 30px;
+        text-decoration: none;
+    }
+
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 30px;
+    }
+
+    .product-card {
+        background: #1a1a1a;
+        border-radius: 15px;
+        padding: 25px;
+        border: 1px solid #2a2a2a;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+        border-color: #8b5cf6;
+    }
+
+    .product-card h3 {
+        color: #eaeaea;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+        line-height: 1.4;
+    }
+
+    .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #333;
+    }
+
+    .price {
+        color: #10b981;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .category {
+        color: #8b5cf6;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        padding: 5px 10px;
+        background: rgba(139, 92, 246, 0.1);
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .product-actions .btn {
+        flex: 1;
+        min-width: 80px;
+        text-align: center;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: #1a1a1a;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #2a2a2a;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+    }
+
+    .modal-content h2 {
+        color: #8b5cf6;
+        margin-bottom: 15px;
+    }
+
+    .modal-content p {
+        margin-bottom: 25px;
+        color: #d1d5db;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .modal-actions .btn {
+        min-width: 100px;
+    }
+
+    @media (max-width: 768px) {
+        .filters {
+            flex-direction: column;
+        }
+        
+        .filters input,
+        .filters select {
+            min-width: 100%;
+        }
+        
+        .products-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .product-actions {
+            flex-direction: column;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>Productos</h1>
+    <h1>📦 Productos</h1>
 
     <form method="get" class="filters">
-        <input type="text" name="q" placeholder="🔍 Buscar producto..."
-        value="{{ search_query|default:'' }}">
+        <input type="text" name="q" placeholder="🔍 Buscar producto..." value="{{ search_query|default:'' }}">
         <select name="category">
-            <option value="">Todas las categorias</option>
+            <option value="">Todas las categorías</option>
             {% for cat in categories %}
-            <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category  %}{% endif %}>
+            <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category %}selected{% endif %}>
                 {{ cat.name }}
             </option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn">Buscar</button>
+        <button type="submit" class="btn">🔎 Buscar</button>
     </form>
 
-    <a href="{% url 'products:add_product' %}" class="btn">Agregar Producto</a>
+    <a href="{% url 'products:add_product' %}" class="btn add-product-btn">➕ Agregar Producto</a>
 
     <div class="products-grid">
         {% for product in products %}
@@ -36,12 +216,11 @@
             {% endif %}
             <p class="price">$ {{ product.price }}</p>
             <p class="category">{{ product.category.name }}</p>
-            <div class-"actions">
-                <a href="{% url 'products:product_detail' product.id %}" class="btn">Detalles</a>
-                <a href="{% url 'products:update_product' product.id %}" class="btn">Editar</a>
-
+            <div class="product-actions">
+                <a href="{% url 'products:product_detail' product.id %}" class="btn">👀 Detalles</a>
+                <a href="{% url 'products:update_product' product.id %}" class="btn">✏️ Editar</a>
                 <button type="button" class="btn btn-danger" onclick="openModal({{ product.id }})">
-                    Eliminar
+                    🗑️ Eliminar
                 </button>
                 <form id="delete-form-{{ product.id }}" method="POST" action="{% url 'products:delete_product' product.id %}">
                     {% csrf_token %}
@@ -55,10 +234,10 @@
 <div id="delete-modal" class="modal">
     <div class="modal-content">
         <h2>⚠️ Confirmar eliminación</h2>
-        <p>Seguro que quieres eliminar este producto?</p>
+        <p>¿Seguro que quieres eliminar este producto?</p>
         <div class="modal-actions">
-            <button type="button" class="btn" onclick="closeModal()">Cancelar</button>
-            <button type="button" class="btn btn-danger" id="confirm-delete">Eliminar</button>
+            <button type="button" class="btn" onclick="closeModal()">❌ Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">✅ Eliminar</button>
         </div>
     </div>
 </div>
@@ -68,7 +247,7 @@
 
     function openModal(productId) {
         productToDelete = productId;
-        document.getElementById("delete-model").style.display = "flex";
+        document.getElementById("delete-modal").style.display = "flex";
     }
 
     function closeModal() {
@@ -76,12 +255,17 @@
         productToDelete = null;
     }
 
-    window.addEventListener("DOMContentLoaded", function() {
-        
-    })
-            document.getElementById('delete-form-${productToDelete}').submit();
+    document.getElementById('confirm-delete').addEventListener('click', function() {
+        if (productToDelete) {
+            document.getElementById('delete-form-' + productToDelete).submit();
+        }
+    });
+
+    // Cerrar modal al hacer click fuera
+    document.getElementById('delete-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeModal();
         }
     });
 </script>
-
 {% endblock %}

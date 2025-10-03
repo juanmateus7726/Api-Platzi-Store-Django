@@ -1,28 +1,154 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Platzi Store</title>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        /* ---- Reset & Globals ---- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #eaeaea;
+            line-height: 1.6;
+        }
+
+        /* ---- Navbar ---- */
+        .navbar {
+            background: linear-gradient(90deg, #141414, #1a1a1a);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar .nav-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #8b5cf6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .navbar .nav-logo:hover {
+            color: #a78bfa;
+            transform: translateY(-1px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: #eaeaea;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #8b5cf6;
+            transform: translateY(-1px);
+        }
+
+        .nav-links span {
+            color: #a78bfa;
+            font-weight: 500;
+        }
+
+        /* ---- Footer ---- */
+        footer {
+            margin-top: 60px;
+            padding: 25px;
+            text-align: center;
+            background: #141414;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        /* ---- Botones ---- */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        /* ---- Containers ---- */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 20px;
+        }
+
+        /* ---- Efectos adicionales ---- */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: #8b5cf6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+    </style>
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <header>
         <nav class="navbar">
-            <a href="{% url 'products:store' %}" class="nav-logo">Mi Tienda</a>
+            <a href="{% url 'products:store' %}" class="nav-logo">🛍️ Mi Tienda</a>
             <div class="nav-links">
-                <a href="{% url 'products:products' %}">Productos</a>
-                <a href="{% url 'products:add_product' %}">Agregar Producto</a>
+                <a href="{% url 'products:products' %}">📦 Productos</a>
+                <a href="{% url 'products:add_product' %}">➕ Agregar Producto</a>
 
                 <!-- 🔹 Links de autenticación -->
                 {% if user.is_authenticated %}
-                    <span>Hola, {{ user.first_name|default:user.username }}</span>
-                    <a href="{% url 'accounts:logout' %}">Cerrar sesión</a>
+                    <span>👋 Hola, {{ user.first_name|default:user.username }}</span>
+                    <a href="{% url 'accounts:logout' %}">🚪 Cerrar sesión</a>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}">Iniciar sesión</a>
-                    <a href="{% url 'accounts:register' %}">Registrarse</a>
+                    <a href="{% url 'accounts:login' %}">🔑 Iniciar sesión</a>
+                    <a href="{% url 'accounts:register' %}">📝 Registrarse</a>
                 {% endif %}
             </div>
         </nav>
@@ -33,7 +159,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Mi Tienda</p>
+        <p>&copy; 2025 Mi Tienda - Todos los derechos reservados</p>
     </footer>
 </body>
 </html>

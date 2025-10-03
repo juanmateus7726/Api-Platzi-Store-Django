@@ -1,31 +1,119 @@
 {% extends 'base.html' %}
-{% load static %}
 
 {% block title %}Detalle{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+<style>
+    .product-detail {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .title {
+        color: #8b5cf6;
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .price {
+        font-size: 2rem;
+        color: #10b981;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #d1d5db;
+        margin-bottom: 30px;
+        text-align: center;
+        padding: 20px;
+        background: #1a1a1a;
+        border-radius: 10px;
+        border: 1px solid #2a2a2a;
+    }
+
+    .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 40px 0;
+    }
+
+    .gallery img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #333;
+        transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+        transform: scale(1.05);
+        border-color: #8b5cf6;
+    }
+
+    .actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+
+    .actions .btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+    }
+
+    @media (max-width: 768px) {
+        .title {
+            font-size: 2rem;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+        }
+        
+        .actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .actions .btn {
+            width: 200px;
+            justify-content: center;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="product-detail">
     <h1 class="title">{{ product.title }}</h1>
     <p class="price">$ {{ product.price }}</p>
     <p class="description">{{ product.description }}</p>
 
     <div class="gallery">
-    {% for image in product.images %}
-        <img src="{{ image }}" alt="{{ product.title }}">
-    {% endfor %}
+        {% for image in product.images %}
+            <img src="{{ image }}" alt="{{ product.title }}">
+        {% endfor %}
     </div>
 
     <div class="actions">
-    <a href="{% url 'products:update_product' product.id %}" class="btn">✏️ Editar</a>
-    <form method="POST" action="{% url 'products:delete_product' product.id %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
-    </form>
-    <a href="{% url 'products:products' %}" class="btn">⬅️ Volver</a>
+        <a href="{% url 'products:update_product' product.id %}" class="btn">✏️ Editar</a>
+        <form method="POST" action="{% url 'products:delete_product' product.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este producto?')">🗑️ Eliminar</button>
+        </form>
+        <a href="{% url 'products:products' %}" class="btn">⬅️ Volver</a>
     </div>
 </div>
 {% endblock %}
