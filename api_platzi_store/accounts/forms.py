@@ -84,7 +84,7 @@ class UserLoginForm(forms.Form):
         max_length=150,
         label='Nombre de usuario',
         widget=forms.TextInput(attrs={
-            'class': 'forms-control',
+            'class': 'form-control',
             'placeholder': 'Tu nombre de usuario',
             'id': 'username'
         })

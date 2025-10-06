@@ -241,7 +241,7 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 # ============================================================================
 
 # URL base de tu API de autenticación (CAMBIAR POR TU URL REAL)
-CUSTOM_API_BASE_URL = "http://127.0.0.1:8000/api/"
+CUSTOM_API_BASE_URL = "http://127.0.0.1:8000/accounts/api/"
 
 # Configuración de timeouts para requests
 API_TIMEOUT = 10  # segundos

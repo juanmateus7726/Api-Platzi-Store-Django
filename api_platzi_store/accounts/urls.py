@@ -8,7 +8,7 @@ urlpatterns = [
     # URLs de la API de autenticacion
     path('api/register/', views.register_api, name='api_register'),
     path('api/login/', views.login_api, name='api_login'),
-    path('api/logout/', views.logout_api, name='appi_logout'),
+    path('api/logout/', views.logout_api, name='api_logout'),
     path('api/profile/', views.user_profile_api, name='api_profile'),
     path('api/check-username/', views.check_username_api, name='api_check_username'),
     path('login/', views.login_view, name='login'),

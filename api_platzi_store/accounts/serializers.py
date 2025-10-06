@@ -24,7 +24,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'email': {'required': True}
         }
     
-    def Validate(self, attrs):
+    def validate(self, attrs):
         """  
         Valida que las contrasenas coincidan y cumplan los requisitos minimos.
         """
@@ -68,6 +68,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         
         return user
     
+    def validate_username(self, value):
+        """Valida que el username no esté ya registrado"""
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError(
+                'Ya existe un usuario con este nombre de usuario'
+            )
+        return value
+
 class UserLoginSerializer(serializers.Serializer):
     """ 
     Serializzer para el inicio de sesion de usuarios.
@@ -101,7 +109,7 @@ class UserLoginSerializer(serializers.Serializer):
             if not user:
                 # Si la autenticacion falla, lanzamos un error
                 raise serializers.ValidationError(
-                    'Esta cuenta esta desactivada',
+                    'Credenciales inválidas. Verifica tu usuario y contraseña',
                     code='inactive'
                 )
                 
